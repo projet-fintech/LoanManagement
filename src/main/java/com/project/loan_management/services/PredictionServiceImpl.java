@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class PredictionServiceImpl implements PredictionService {
@@ -21,46 +21,87 @@ public class PredictionServiceImpl implements PredictionService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public String getPredictionAndUpdateResult(Long loanApplicationId) {
-        // Step 1: Fetch the loan application by ID
-        Optional<LoanApplication> loanApplicationOptional = loanApplicationRepository.findById(loanApplicationId);
+    @Override
+    public String getPredictionAndUpdateResult(Long applicationId) {
+        LoanApplication loanApplication = loanApplicationRepository.findById(applicationId)
+                .orElseThrow(() -> new RuntimeException("LoanApplication with ID " + applicationId + " not found"));
 
-        if (loanApplicationOptional.isEmpty()) {
-            throw new RuntimeException("LoanApplication with ID " + loanApplicationId + " not found");
-        }
+        // Create a LinkedHashMap to preserve feature order as expected by the Flask model
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("person_age", loanApplication.getPersonAge());
+        data.put("person_gender", mapGenderToCode(loanApplication.getPersonGender()));
+        data.put("person_education", mapEducationToCode(loanApplication.getPersonEducation()));
+        data.put("person_income", loanApplication.getPersonIncome());
+        data.put("person_emp_exp", loanApplication.getPersonEmpExp());
+        data.put("person_home_ownership", mapHomeOwnershipToCode(loanApplication.getPersonHomeOwnership()));
+        data.put("loan_amnt", loanApplication.getLoanAmount()); // Changed from "loan_amnt" to "loan_amount"
+        data.put("loan_intent", mapLoanIntentToCode(loanApplication.getLoanIntent()));
+        data.put("loan_int_rate", loanApplication.getLoanIntRate());
+        data.put("loan_percent_income", loanApplication.getLoanPercentIncome());
+        data.put("cb_person_cred_hist_length", loanApplication.getCbPersonCredHistLength());
+        data.put("credit_score", loanApplication.getCreditScore());
+        data.put("previous_loan_defaults_on_file", loanApplication.getPreviousLoanDefaultsOnFile() ? 1 : 0);
 
-        LoanApplication loanApplication = loanApplicationOptional.get();
-
-        // Step 2: Prepare the request data
+        // Wrap the data under the "data" key as expected by the Flask API
         Map<String, Object> requestData = new HashMap<>();
-        Map<String, Object> data = new HashMap<>();
-        data.put("Loan_ID", loanApplication.getLoanId());
-        data.put("Gender", loanApplication.getGender());
-        data.put("Married", loanApplication.getMarried());
-        data.put("Dependents", loanApplication.getDependents());
-        data.put("Education", loanApplication.getEducation());
-        data.put("Self_Employed", loanApplication.getSelfEmployed());
-        data.put("ApplicantIncome", loanApplication.getApplicantIncome());
-        data.put("CoapplicantIncome", loanApplication.getCoapplicantIncome());
-        data.put("LoanAmount", loanApplication.getLoanAmount());
-        data.put("Loan_Amount_Term", loanApplication.getLoanAmountTerm());
-        data.put("Credit_History", loanApplication.getCreditHistory());
-        data.put("Property_Area", loanApplication.getPropertyArea());
         requestData.put("data", data);
 
-        // Step 3: Send the POST request to the Flask model
-        Map<String, String> response = restTemplate.postForObject(PREDICTION_API_URL, requestData, Map.class);
+        try {
+            // Make the POST request
+            Map<String, String> response = restTemplate.postForObject(PREDICTION_API_URL, requestData, Map.class);
 
-        if (response == null || !response.containsKey("prediction")) {
-            throw new RuntimeException("Failed to get prediction from Flask API");
+            if (response == null || !response.containsKey("prediction")) {
+                throw new RuntimeException("Invalid response from Flask API: " + response);
+            }
+
+            String predictionResult = response.get("prediction");
+            loanApplication.setPredictionResult(predictionResult);
+            loanApplicationRepository.save(loanApplication);
+
+            return predictionResult;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get prediction from Flask API", e);
         }
+    }
 
-        String prediction = response.get("prediction");
+    // Map gender to numeric codes
+    private int mapGenderToCode(String gender) {
+        return "Female".equalsIgnoreCase(gender) ? 0 : 1;
+    }
 
-        // Step 4: Update the loan application with the prediction result
-        loanApplication.setPredictionResult(prediction);
-        loanApplicationRepository.save(loanApplication);
+    // Map education level to numeric codes
+    private int mapEducationToCode(String education) {
+        return switch (education.toLowerCase()) {
+            case "bachelor" -> 0;
+            case "associate" -> 1;
+            case "high school" -> 2;
+            case "master" -> 3;
+            case "doctorate" -> 4;
+            default -> throw new IllegalArgumentException("Invalid education level: " + education);
+        };
+    }
 
-        return prediction;
+    // Map home ownership to numeric codes
+    private int mapHomeOwnershipToCode(String homeOwnership) {
+        return switch (homeOwnership.toLowerCase()) {
+            case "rent" -> 0;
+            case "mortgage" -> 1;
+            case "own" -> 2;
+            case "other" -> 3;
+            default -> throw new IllegalArgumentException("Invalid home ownership: " + homeOwnership);
+        };
+    }
+
+    // Map loan intent to numeric codes
+    private int mapLoanIntentToCode(String intent) {
+        return switch (intent.toLowerCase()) {
+            case "education" -> 0;
+            case "medical" -> 1;
+            case "venture" -> 2;
+            case "personal" -> 3;
+            case "debt consolidation" -> 4;
+            case "home improvement" -> 5;
+            default -> throw new IllegalArgumentException("Invalid loan intent: " + intent);
+        };
     }
 }

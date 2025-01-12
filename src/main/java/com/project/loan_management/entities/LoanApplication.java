@@ -5,44 +5,49 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
+/**
+ * Represents a loan application with user details and associated loan data.
+ */
 @Entity
 @Data
 public class LoanApplication {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; // Unique identifier for the loan application
 
-    private String loanId;
+    private Integer personAge; // Age of the applicant
 
-    private String gender;
+    private String personGender; // Gender of the applicant ("Male", "Female")
 
-    private String married;
+    private String personEducation; // Educational level of the applicant ("Bachelor", "Master", etc.)
 
-    private String dependents;
+    private Double personIncome; // Annual income of the applicant
 
-    private String education;
+    private Integer personEmpExp; // Employment experience in years
 
-    private String selfEmployed;
+    private String personHomeOwnership; // Home ownership status ("Rent", "Own", "Mortgage", etc.)
 
-    private Integer applicantIncome;
+    private Double loanAmount; // Requested loan amount
 
-    private Integer coapplicantIncome;
+    private String loanIntent; // Purpose of the loan ("Personal", "Debt Consolidation", etc.)
 
-    private Integer loanAmount;
+    private Double loanIntRate; // Interest rate for the loan
 
-    private Integer loanAmountTerm;
+    private Double loanPercentIncome; // Percentage of income allocated to the loan
 
-    private Integer creditHistory;
+    private Integer cbPersonCredHistLength; // Length of credit history in years
 
-    private String propertyArea;
+    private Integer creditScore; // Credit score of the applicant
 
-    private LocalDate applicationDate;
+    private Boolean previousLoanDefaultsOnFile; // Indicates if there are previous loan defaults (true/false)
+
+    private LocalDate applicationDate; // Date when the application was submitted
 
     @Enumerated(EnumType.STRING)
-    private LoanStatus status;
+    private LoanStatus status; // Status of the loan application (e.g., PENDING, APPROVED)
 
-    private String predictionResult;
+    private String predictionResult; // Prediction result from the Flask API
 
-    private  Long UserId ;
-
+    private Long userId; // ID of the user associated with this application
 }

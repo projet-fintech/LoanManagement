@@ -36,18 +36,19 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
     public LoanApplication updateLoanApplication(Long id, LoanApplication loanApplication) {
         return loanApplicationRepository.findById(id)
                 .map(existingLoan -> {
-                    existingLoan.setLoanId(loanApplication.getLoanId());
-                    existingLoan.setGender(loanApplication.getGender());
-                    existingLoan.setMarried(loanApplication.getMarried());
-                    existingLoan.setDependents(loanApplication.getDependents());
-                    existingLoan.setEducation(loanApplication.getEducation());
-                    existingLoan.setSelfEmployed(loanApplication.getSelfEmployed());
-                    existingLoan.setApplicantIncome(loanApplication.getApplicantIncome());
-                    existingLoan.setCoapplicantIncome(loanApplication.getCoapplicantIncome());
+                    existingLoan.setPersonAge(loanApplication.getPersonAge());
+                    existingLoan.setPersonGender(loanApplication.getPersonGender());
+                    existingLoan.setPersonEducation(loanApplication.getPersonEducation());
+                    existingLoan.setPersonIncome(loanApplication.getPersonIncome());
+                    existingLoan.setPersonEmpExp(loanApplication.getPersonEmpExp());
+                    existingLoan.setPersonHomeOwnership(loanApplication.getPersonHomeOwnership());
                     existingLoan.setLoanAmount(loanApplication.getLoanAmount());
-                    existingLoan.setLoanAmountTerm(loanApplication.getLoanAmountTerm());
-                    existingLoan.setCreditHistory(loanApplication.getCreditHistory());
-                    existingLoan.setPropertyArea(loanApplication.getPropertyArea());
+                    existingLoan.setLoanIntent(loanApplication.getLoanIntent());
+                    existingLoan.setLoanIntRate(loanApplication.getLoanIntRate());
+                    existingLoan.setLoanPercentIncome(loanApplication.getLoanPercentIncome());
+                    existingLoan.setCbPersonCredHistLength(loanApplication.getCbPersonCredHistLength());
+                    existingLoan.setCreditScore(loanApplication.getCreditScore());
+                    existingLoan.setPreviousLoanDefaultsOnFile(loanApplication.getPreviousLoanDefaultsOnFile());
                     existingLoan.setStatus(loanApplication.getStatus());
                     existingLoan.setPredictionResult(loanApplication.getPredictionResult());
                     return loanApplicationRepository.save(existingLoan);
