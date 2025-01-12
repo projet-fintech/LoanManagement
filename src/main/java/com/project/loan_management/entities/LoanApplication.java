@@ -20,17 +20,17 @@ public class LoanApplication {
 
     private String personGender; // Gender of the applicant ("Male", "Female")
 
-    private String personEducation; // Educational level of the applicant ("Bachelor", "Master", etc.)
+    private String personEducation; // Educational level of the applicant ("Bachelor", "Master","Associate" , "High School" , "Master" , "Doctorate")
 
     private Double personIncome; // Annual income of the applicant
 
     private Integer personEmpExp; // Employment experience in years
 
-    private String personHomeOwnership; // Home ownership status ("Rent", "Own", "Mortgage", etc.)
+    private String personHomeOwnership; // Home ownership status ("Rent", "Own", "Mortgage", "Others")
 
     private Double loanAmount; // Requested loan amount
 
-    private String loanIntent; // Purpose of the loan ("Personal", "Debt Consolidation", etc.)
+    private String loanIntent; // Purpose of the loan ("Personal", "Debt Consolidation" "Education", "Medical" ,  "Venture" , "Home improvement" )
 
     private Double loanIntRate; // Interest rate for the loan
 
