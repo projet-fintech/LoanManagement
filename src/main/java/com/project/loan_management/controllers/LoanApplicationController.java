@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/loan-applications")
@@ -59,5 +60,12 @@ public class LoanApplicationController {
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    // Get Loan Applications by Client ID
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<List<LoanApplication>> getLoanApplicationsByUserId(@PathVariable UUID userId) {
+        List<LoanApplication> loanApplications = loanApplicationService.getLoanApplicationsByUserId(userId);
+        return ResponseEntity.ok(loanApplications);
     }
 }

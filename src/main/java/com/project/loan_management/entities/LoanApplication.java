@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 /**
  * Represents a loan application with user details and associated loan data.
@@ -49,7 +50,7 @@ public class LoanApplication {
 
     private String predictionResult; // Prediction result from the Flask API
 
-    private Long userId; // ID of the user associated with this application
+    private UUID userId; // ID of the user associated with this application
 
     private Double monthlyPaying; // Persisted monthly payment field
 

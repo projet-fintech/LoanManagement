@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class LoanApplicationServiceImpl implements LoanApplicationService {
@@ -63,5 +64,10 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
         } else {
             throw new RuntimeException("LoanApplication with ID " + id + " not found");
         }
+    }
+
+    @Override
+    public List<LoanApplication> getLoanApplicationsByUserId(UUID userId) {
+            return loanApplicationRepository.findByUserId(userId);
     }
 }
