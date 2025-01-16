@@ -50,4 +50,26 @@ public class LoanApplication {
     private String predictionResult; // Prediction result from the Flask API
 
     private Long userId; // ID of the user associated with this application
+
+    private Double monthlyPaying; // Persisted monthly payment field
+
+    /**
+     * Method to calculate and set the monthly payment based on loanAmount and loanIntRate.
+     */
+    public void calculateMonthlyPaying() {
+        if (loanAmount != null && loanIntRate != null) {
+            this.monthlyPaying = (loanAmount + (loanAmount * (loanIntRate / 100))) / 12;
+        } else {
+            this.monthlyPaying = null; // Set to null if inputs are missing
+        }
+    }
+
+    /**
+     * Lifecycle callback to calculate monthlyPaying before persisting or updating the entity.
+     */
+    @PrePersist
+    @PreUpdate
+    public void prePersistOrUpdate() {
+        calculateMonthlyPaying();
+    }
 }
