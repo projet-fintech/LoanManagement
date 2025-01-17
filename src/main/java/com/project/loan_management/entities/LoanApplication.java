@@ -52,6 +52,8 @@ public class LoanApplication {
 
     private UUID userId; // ID of the user associated with this application
 
+    private UUID account_id; // ID of account of user associated with this application
+
     private Double monthlyPaying; // Persisted monthly payment field
 
     /**
