@@ -27,6 +27,12 @@
         <url/>
     </scm>
     <properties>
+        <repositories>
+            <repository>
+                <id>local-repo</id>
+                <url>file://${project.basedir}/repo</url>
+            </repository>
+        </repositories>
         <java.version>17</java.version>
         <spring-cloud.version>2024.0.0</spring-cloud.version>
     </properties>
