@@ -49,7 +49,7 @@ public class PredictionServiceImpl implements PredictionService {
 
         try {
             // Make the POST request
-            Map<String, String> response = restTemplate.postForObject(PREDICTION_API_URL, requestData, Map.class);
+            Map<String, String> response = restTemplate.postForObject(predictionApiUrl, requestData, Map.class);
 
             if (response == null || !response.containsKey("prediction")) {
                 throw new RuntimeException("Invalid response from Flask API: " + response);
