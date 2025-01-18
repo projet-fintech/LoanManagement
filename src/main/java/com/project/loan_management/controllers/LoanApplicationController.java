@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/loan-applications")
+@CrossOrigin(origins = "*")
 public class LoanApplicationController {
 
     @Autowired

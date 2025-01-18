@@ -5,7 +5,7 @@ import com.project.loan_management.repositories.LoanApplicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
+import org.springframework.beans.factory.annotation.Value;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -13,7 +13,8 @@ import java.util.Map;
 @Service
 public class PredictionServiceImpl implements PredictionService {
 
-    private static final String PREDICTION_API_URL = "http://127.0.0.1:5000/predict_api";
+    @Value("${prediction.api.url}")
+    private String predictionApiUrl;
 
     @Autowired
     private LoanApplicationRepository loanApplicationRepository;

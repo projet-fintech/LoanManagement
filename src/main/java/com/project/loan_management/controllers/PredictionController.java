@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/prediction")
+@CrossOrigin(origins = "*")
 public class PredictionController {
 
     @Autowired
