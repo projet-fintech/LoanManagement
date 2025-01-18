@@ -21,7 +21,7 @@ public class MonthlyLoanScheduler {
 
     @Autowired TransactionService transactionService;
 
-    //@Scheduled(cron = "0 0 0 1 * ?") // Runs every month at midnight
+    @Scheduled(cron = "0 0 0 1 * ?") // Runs every month at midnight
     public void processMonthlyPayments() {
         logger.info("Starting monthly payment processing for approved loans");
         List<LoanApplication> approvedLoans = loanApplicationService.getAllLoanApplications().stream()
