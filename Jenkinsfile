@@ -6,13 +6,13 @@ pipeline {
         dockerTool 'Docker'
     }
     environment {
-        AWS_REGION = 'eu-west-3'
-        ECR_REGISTRY = '329599629502.dkr.ecr.eu-west-3.amazonaws.com'
-        IMAGE_NAME = 'loan-management'
-         COMPONENT_NAME = 'LoanManagement'
-         SONAR_TOKEN = '39cc334a0a13dc54d616ab48a6949fae534f6b15'
-         LoanManagementSONAR_HOST = 'http://192.168.0.147:9000'
-    }
+    AWS_REGION = 'eu-west-3'
+    ECR_REGISTRY = '329599629502.dkr.ecr.eu-west-3.amazonaws.com'
+    IMAGE_NAME = 'loan-management'
+    COMPONENT_NAME = 'LoanManagement'
+    SONAR_TOKEN = '39cc334a0a13dc54d616ab48a6949fae534f6b15'
+    SONAR_HOST = 'http://192.168.0.147:9000'  // Corrected variable name
+}
     stages {
         stage('Checkout') {
             steps {
