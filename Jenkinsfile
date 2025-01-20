@@ -121,7 +121,7 @@ stage('SonarQube Analysis') {
                 script {
                     withCredentials([aws(credentialsId: 'aws-credentials')]) {
                         sh """
-                            aws eks --region ${AWS_REGION} update-kubeconfig --name your-eks-cluster-name
+                            aws eks --region ${AWS_REGION} update-kubeconfig --name main-eks-cluster
                             kubectl apply -f kubernetes/loan_management_deployement.yaml
                             kubectl apply -f kubernetes/loan_management_service.yaml
                         """
